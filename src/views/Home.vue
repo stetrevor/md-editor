@@ -37,11 +37,9 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["getAllFiles", "addFile", "setEditingFile"]),
+    ...mapActions(["getAllFiles", "addFile"]),
 
     edit(file) {
-      // this.$router.push({ name: "edit", params: { slug: name } });
-      this.setEditingFile({ file });
       this.$router.push({ name: "edit", params: { id: file.id } });
     },
 

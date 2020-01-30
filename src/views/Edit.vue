@@ -45,13 +45,13 @@ function setupAutoSave(input1, input2, saveFunc, statusFunc) {
   const keyup2$ = fromEvent(input2, "keyup");
   const save = () => from(saveFunc());
   const input1ToSave$ = keyup1$.pipe(
-    debounceTime(1000),
+    debounceTime(200),
     map(e => e.target.value),
     distinctUntilChanged(),
     share()
   );
   const input2ToSave$ = keyup2$.pipe(
-    debounceTime(1000),
+    debounceTime(200),
     map(e => e.target.value),
     distinctUntilChanged(),
     share()
@@ -98,10 +98,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(["deleteFile", "saveFile"]),
+    ...mapActions(["deleteFile", "saveFile", "setEditingFile"]),
 
     back() {
-      this.save();
+      // this.save();
       this.$router.go(-1);
     },
 
@@ -122,6 +122,15 @@ export default {
     const saveFunc = this.save;
     const statusFunc = value => (this.saveStatus = value);
     setupAutoSave(input1, input2, saveFunc, statusFunc);
+  },
+
+  beforeRouteEnter(to, from, next) {
+    next(vm => vm.setEditingFile({ id: to.params.id }));
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    this.setEditingFile({ id: to.params.id });
+    next();
   },
 
   data() {
