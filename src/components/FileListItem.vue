@@ -1,6 +1,6 @@
 <template>
   <div class="file-list-item">
-    <p>{{ item.name }}</p>
+    <p>{{ item.title }}</p>
   </div>
 </template>
 
