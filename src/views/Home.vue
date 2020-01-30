@@ -15,13 +15,25 @@
 // @ is an alias to /src
 import FileListItem from "@/components/FileListItem.vue";
 
+import { mapState, mapActions } from "vuex";
+
 export default {
   name: "home",
   components: {
     FileListItem
   },
 
+  beforeRouteEnter(to, from, next) {
+    next(vm => vm.getAllFiles());
+  },
+
+  computed: mapState({
+    files: state => state.files
+  }),
+
   methods: {
+    ...mapActions(["getAllFiles"]),
+
     edit({ name }) {
       this.$router.push({ name: "edit", params: { slug: name } });
     }
@@ -29,11 +41,11 @@ export default {
 
   data() {
     return {
-      files: [
-        { name: "First-Page-2020-01-29-Beijing.md" },
-        { name: "Second-Page-2020-01-29-Beijing.md" },
-        { name: "Third-Page-2020-01-29-Beijing.md" }
-      ]
+      // files: [
+      //   { name: "First-Page-2020-01-29-Beijing.md" },
+      //   { name: "Second-Page-2020-01-29-Beijing.md" },
+      //   { name: "Third-Page-2020-01-29-Beijing.md" }
+      // ]
     };
   }
 };
