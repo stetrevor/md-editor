@@ -2,12 +2,13 @@
   <div class="edit">
     <div class="edit__header">
       <div class="edit__back edit__button" @click="back">Back</div>
+      <div class="edit__save-status">{{ saveStatus }}</div>
       <div class="edit__delete edit__button" @click="remove">Delete</div>
     </div>
 
     <div class="edit__content">
       <textarea
-        class="edit__file-name"
+        class="edit__title"
         v-model="title"
         placeholder="Title"
       ></textarea>
@@ -22,6 +23,61 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+
+import { fromEvent, of, from, merge, empty, concat, defer } from "rxjs";
+import {
+  delay,
+  map,
+  mergeMap,
+  tap,
+  debounceTime,
+  distinctUntilChanged,
+  mapTo,
+  filter,
+  share,
+  switchAll
+} from "rxjs/operators";
+
+function setupAutoSave(input1, input2, saveFunc, statusFunc) {
+  let savesInProgress = 0;
+
+  const keyup1$ = fromEvent(input1, "keyup");
+  const keyup2$ = fromEvent(input2, "keyup");
+  const save = () => from(saveFunc());
+  const input1ToSave$ = keyup1$.pipe(
+    debounceTime(1000),
+    map(e => e.target.value),
+    distinctUntilChanged(),
+    share()
+  );
+  const input2ToSave$ = keyup2$.pipe(
+    debounceTime(1000),
+    map(e => e.target.value),
+    distinctUntilChanged(),
+    share()
+  );
+  const inputsToSave$ = merge(input1ToSave$, input2ToSave$);
+  const savesInProgress$ = inputsToSave$.pipe(
+    mapTo(of("Saving...")),
+    tap(() => savesInProgress++)
+  );
+  const savesCompleted$ = inputsToSave$.pipe(
+    mergeMap(save),
+    tap(() => savesInProgress--),
+    filter(() => !savesInProgress),
+    mapTo(
+      concat(
+        of("Saved!"),
+        empty().pipe(delay(2000)),
+        defer(() => of(`Updated at ${new Date().toLocaleTimeString()}`))
+      )
+    )
+  );
+
+  merge(savesInProgress$, savesCompleted$)
+    .pipe(switchAll())
+    .subscribe(statusFunc);
+}
 
 export default {
   name: "Edit",
@@ -45,15 +101,33 @@ export default {
     ...mapActions(["deleteFile", "saveFile"]),
 
     back() {
-      const editedFile = Object.assign({}, this.file, { updated: new Date() });
-      this.saveFile({ file: editedFile });
+      this.save();
       this.$router.go(-1);
     },
 
     remove() {
       this.deleteFile({ file: this.file });
       this.$router.go(-1);
+    },
+
+    save() {
+      const editedFile = Object.assign({}, this.file, { updated: new Date() });
+      return this.saveFile({ file: editedFile });
     }
+  },
+
+  mounted() {
+    const input1 = this.$el.querySelector(".edit__title");
+    const input2 = this.$el.querySelector(".edit__text");
+    const saveFunc = this.save;
+    const statusFunc = value => (this.saveStatus = value);
+    setupAutoSave(input1, input2, saveFunc, statusFunc);
+  },
+
+  data() {
+    return {
+      saveStatus: ""
+    };
   }
 };
 </script>
@@ -85,8 +159,9 @@ export default {
     }
   }
 
-  &__delete {
+  &__save-status {
     margin-left: auto;
+    margin-right: auto;
   }
 
   &__content {
@@ -95,7 +170,7 @@ export default {
     height: 100vh;
   }
 
-  &__file-name,
+  &__title,
   &__text {
     outline: none;
     border: none;
@@ -103,7 +178,7 @@ export default {
     font-family: "Port Lligat Slab", serif;
   }
 
-  &__file-name {
+  &__title {
     box-sizing: border-box;
     border-bottom: 1px solid rgba(#2c3e50, 0.3);
     font-weight: 500;
