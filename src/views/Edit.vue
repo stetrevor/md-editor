@@ -1,14 +1,14 @@
 <template>
   <div class="edit">
     <div class="edit__header">
-      <router-link to="/" class="edit__back edit__button">Back</router-link>
-      <div class="edit__delete edit__button" @click="remove">Delete</div>
+      <div class="edit__back edit__button" @click="back">Back</div>
+      <div class="edit__delete edit__button" @click="deleteFile">Delete</div>
     </div>
 
     <div class="edit__content">
       <textarea
         class="edit__file-name"
-        v-model="file.name"
+        v-model="title"
         placeholder="Title"
       ></textarea>
       <textarea
@@ -21,23 +21,38 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
   name: "Edit",
 
-  methods: {
-    remove() {
-      console.log("remove");
+  computed: {
+    ...mapState({
+      file: state => state.editingFile
+    }),
+
+    title: {
+      get() {
+        return this.file.title === "Untitled" ? "" : this.file.title;
+      },
+      set(newValue) {
+        this.file.title = newValue;
+      }
     }
   },
 
-  data() {
-    return {
-      file: {
-        name: "First-Page-2020-01-29-Beijing.md",
-        text:
-          "In web design you can achieve an optimal number of characters per line by restricting the width of your text blocks using em or pixels. (You achieve the best results with em but it can also be a bit more tricky to work with than pixels.) Regardless of which one you choose, your layout will have to be in a fixed width if you want to achieve an optimal line length for the majority of your visitors.\n\nThis is one of the reasons we don’t recommend using entirely liquid layouts – you practically force the user to resize their browser window if they want a good reading experience on your site. When you consider the myriad of different window sizes used nowadays, it’s obvious that a liquid layout will result in a more or less random line length."
-      }
-    };
+  methods: {
+    ...mapActions(["deleteFile", "saveFile"]),
+
+    back() {
+      const editedFile = Object.assign({}, this.file, { updated: new Date() });
+      this.saveFile({ file: editedFile });
+      this.$router.go(-1);
+    },
+
+    deleteFile() {
+      this.deleteFile({ file: this.file });
+    }
   }
 };
 </script>
@@ -58,6 +73,7 @@ export default {
 
   &__button {
     padding: 8px;
+    cursor: pointer;
   }
 
   &__back {

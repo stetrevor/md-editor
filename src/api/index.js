@@ -35,5 +35,9 @@ export default {
 
     const id = await (await dbPromise).add("articles", newArticle);
     return Object.assign({}, newArticle, { id });
+  },
+
+  async updateFile(file) {
+    return (await dbPromise).put("articles", file);
   }
 };

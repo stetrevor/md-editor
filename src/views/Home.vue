@@ -32,16 +32,17 @@ export default {
   },
 
   computed: mapState({
-    files: state => state.files,
+    files: state => state.files.sort((a, b) => b.updated - a.updated),
     newFile: state => state.newFile
   }),
 
   methods: {
-    ...mapActions(["getAllFiles", "addFile"]),
+    ...mapActions(["getAllFiles", "addFile", "setEditingFile"]),
 
-    edit({ id }) {
+    edit(file) {
       // this.$router.push({ name: "edit", params: { slug: name } });
-      this.$router.push({ name: "edit", params: { id } });
+      this.setEditingFile({ file });
+      this.$router.push({ name: "edit", params: { id: file.id } });
     },
 
     async write() {
