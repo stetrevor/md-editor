@@ -2,12 +2,16 @@
   <div class="home">
     <h1 class="home__header">MD Editor</h1>
 
-    <file-list-item
-      v-for="item in files"
-      :key="item.name"
-      :item="item"
-      @click.native="edit(item)"
-    ></file-list-item>
+    <div class="home__files">
+      <file-list-item
+        v-for="item in files"
+        :key="item.name"
+        :item="item"
+        @click.native="edit(item)"
+      ></file-list-item>
+    </div>
+
+    <div class="home__add-article" @click="write">Write</div>
   </div>
 </template>
 
@@ -28,31 +32,31 @@ export default {
   },
 
   computed: mapState({
-    files: state => state.files
+    files: state => state.files,
+    newFile: state => state.newFile
   }),
 
   methods: {
-    ...mapActions(["getAllFiles"]),
+    ...mapActions(["getAllFiles", "addFile"]),
 
-    edit({ name }) {
-      this.$router.push({ name: "edit", params: { slug: name } });
+    edit({ id }) {
+      // this.$router.push({ name: "edit", params: { slug: name } });
+      this.$router.push({ name: "edit", params: { id } });
+    },
+
+    async write() {
+      await this.addFile();
+      this.edit(this.newFile);
     }
-  },
-
-  data() {
-    return {
-      // files: [
-      //   { name: "First-Page-2020-01-29-Beijing.md" },
-      //   { name: "Second-Page-2020-01-29-Beijing.md" },
-      //   { name: "Third-Page-2020-01-29-Beijing.md" }
-      // ]
-    };
   }
 };
 </script>
 
 <style lang="scss">
 .home {
+  display: flex;
+  flex-direction: column;
+
   &__header {
     box-sizing: border-box;
     text-align: center;
@@ -61,6 +65,22 @@ export default {
     margin: 0;
     padding: 16px;
     height: 64px;
+  }
+
+  &__files {
+    flex-grow: 1;
+    flex-basis: calc(100vh - 64px - 48px);
+  }
+
+  &__add-article {
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #2c3e50;
+    color: white;
+    margin: 0;
+    padding: 16px;
+    height: 48px;
+    cursor: pointer;
   }
 }
 </style>

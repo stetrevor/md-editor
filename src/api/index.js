@@ -23,5 +23,17 @@ const dbPromise = openDB("md-editor", 1, {
 export default {
   async getAllFiles() {
     return (await dbPromise).getAllFromIndex("articles", "updated");
+  },
+
+  async addFile() {
+    const newArticle = {
+      title: "Untitled",
+      text: "",
+      created: new Date(),
+      updated: new Date()
+    };
+
+    const id = await (await dbPromise).add("articles", newArticle);
+    return Object.assign({}, newArticle, { id });
   }
 };
