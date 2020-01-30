@@ -11,7 +11,7 @@ const routes = [
     component: Home
   },
   {
-    path: "/:slug/edit",
+    path: "/:id/edit",
     name: "edit",
     component: () => import("../views/Edit.vue")
   },
