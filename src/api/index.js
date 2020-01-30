@@ -39,5 +39,9 @@ export default {
 
   async updateFile(file) {
     return (await dbPromise).put("articles", file);
+  },
+
+  async deleteFile(file) {
+    return (await dbPromise).delete("articles", file.id);
   }
 };

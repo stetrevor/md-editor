@@ -2,7 +2,7 @@
   <div class="edit">
     <div class="edit__header">
       <div class="edit__back edit__button" @click="back">Back</div>
-      <div class="edit__delete edit__button" @click="deleteFile">Delete</div>
+      <div class="edit__delete edit__button" @click="remove">Delete</div>
     </div>
 
     <div class="edit__content">
@@ -50,8 +50,9 @@ export default {
       this.$router.go(-1);
     },
 
-    deleteFile() {
+    remove() {
       this.deleteFile({ file: this.file });
+      this.$router.go(-1);
     }
   }
 };

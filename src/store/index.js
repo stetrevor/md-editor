@@ -9,6 +9,7 @@ const GET_ALL_FILES = "GET_ALL_FILES";
 const ADD_FILE = "ADD_FILE";
 const SET_EDITING_FILE = "SET_EDITING_FILE";
 const SAVE_FILE = "SAVE_FILE";
+const DELETE_FILE = "DELETE_FILE";
 
 export default new Vuex.Store({
   state: {
@@ -33,6 +34,11 @@ export default new Vuex.Store({
     [SAVE_FILE](state, { file }) {
       const index = state.files.findIndex(f => f.id === file.id);
       state.files.splice(index, 1, file);
+    },
+
+    [DELETE_FILE](state, { file }) {
+      const index = state.files.findIndex(f => f.id === file.id);
+      state.files.splice(index, 1);
     }
   },
 
@@ -54,6 +60,11 @@ export default new Vuex.Store({
     async saveFile({ commit }, { file }) {
       await api.updateFile(file);
       commit(SAVE_FILE, { file });
+    },
+
+    async deleteFile({ commit }, { file }) {
+      await api.deleteFile(file);
+      commit(DELETE_FILE, { file });
     }
   },
   modules: {}
