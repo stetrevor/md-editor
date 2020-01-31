@@ -123,6 +123,12 @@ export default {
     const saveFunc = this.save;
     const statusFunc = value => (this.saveStatus = value);
     setupAutoSave(input1, input2, saveFunc, statusFunc);
+
+    // Setup title textarea autoresize
+    const offset = input1.offsetHeight - input1.clientHeight;
+    input1.addEventListener("input", event => {
+      event.target.style.height = event.target.scrollHeight + offset + "px";
+    });
   },
 
   beforeRouteEnter(to, from, next) {
@@ -159,6 +165,7 @@ export default {
   &__button {
     padding: 8px;
     cursor: pointer;
+    user-select: none;
   }
 
   &__back {
@@ -192,10 +199,11 @@ export default {
     box-sizing: border-box;
     border-bottom: 1px solid rgba(#2c3e50, 0.3);
     font-weight: 500;
-    min-height: 22px + 16px * 2;
-    resize: vertical;
     font-size: 22px;
+    line-height: 1.6;
     width: 100vw;
+    height: 22px * 1.6 + 16px * 2;
+    resize: none;
   }
 
   &__text {

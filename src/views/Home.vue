@@ -80,6 +80,7 @@ export default {
     padding: 16px;
     height: 48px;
     cursor: pointer;
+    user-select: none;
   }
 }
 </style>
