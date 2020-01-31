@@ -27,8 +27,7 @@ export default new Vuex.Store({
       state.newFile = file;
     },
 
-    [SET_EDITING_FILE](state, { id }) {
-      const file = state.files.find(f => f.id === id);
+    [SET_EDITING_FILE](state, { file }) {
       state.editingFile = file;
     },
 
@@ -54,8 +53,14 @@ export default new Vuex.Store({
       commit(ADD_FILE, { file });
     },
 
-    setEditingFile({ commit }, { id }) {
-      commit(SET_EDITING_FILE, { id });
+    async setEditingFile({ commit, state }, { id }) {
+      let file = state.files.find(f => f.id === id);
+
+      if (file === undefined) {
+        file = await api.getFileById(id);
+        state.files.push(file);
+      }
+      commit(SET_EDITING_FILE, { file });
     },
 
     async saveFile({ commit }, { file }) {

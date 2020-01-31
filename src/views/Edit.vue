@@ -84,7 +84,8 @@ export default {
 
   computed: {
     ...mapState({
-      file: state => state.editingFile
+      file: state =>
+        state.editingFile ? state.editingFile : { title: "", text: "" }
     }),
 
     title: {
@@ -125,11 +126,11 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    next(vm => vm.setEditingFile({ id: to.params.id }));
+    next(vm => vm.setEditingFile({ id: parseInt(to.params.id) }));
   },
 
   beforeRouteUpdate(to, from, next) {
-    this.setEditingFile({ id: to.params.id });
+    this.setEditingFile({ id: parseInt(to.params.id) });
     next();
   },
 

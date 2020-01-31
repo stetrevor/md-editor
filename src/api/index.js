@@ -25,6 +25,10 @@ export default {
     return (await dbPromise).getAllFromIndex("articles", "updated");
   },
 
+  async getFileById(id) {
+    return await (await dbPromise).get("articles", id);
+  },
+
   async addFile() {
     const newArticle = {
       title: "Untitled",
