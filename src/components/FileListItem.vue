@@ -1,6 +1,8 @@
 <template>
   <div class="file-list-item">
-    <p>{{ item.title }}</p>
+    <div class="file-list-item__title">
+      {{ item.title }}
+    </div>
   </div>
 </template>
 
@@ -22,5 +24,14 @@ export default {
   height: 64px;
   border-bottom: 1px solid rgba(#2c3e50, 0.3);
   font-size: 1em;
+
+  display: flex;
+  align-items: center;
+
+  &__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 </style>
