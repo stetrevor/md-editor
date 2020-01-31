@@ -55,6 +55,7 @@ export default {
 .home {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 
   &__header {
     box-sizing: border-box;
@@ -68,7 +69,7 @@ export default {
 
   &__files {
     flex-grow: 1;
-    flex-basis: calc(100vh - 64px - 48px);
+    overflow: scroll;
   }
 
   &__add-article {
