@@ -7,17 +7,18 @@
     </div>
 
     <div class="edit__content">
-      <textarea
-        class="edit__title"
-        v-model="title"
-        placeholder="Title"
-      ></textarea>
+      <textarea class="edit__title" v-model.trim="title" placeholder="Title" />
+
+      <div class="edit__divider"></div>
+
       <textarea
         class="edit__text"
-        v-model="file.text"
+        v-model.trim="file.text"
         placeholder="Write Something..."
       ></textarea>
     </div>
+
+    <div class="edit__title-height"></div>
   </div>
 </template>
 
@@ -124,11 +125,21 @@ export default {
     const statusFunc = value => (this.saveStatus = value);
     setupAutoSave(input1, input2, saveFunc, statusFunc);
 
-    // Setup title textarea autoresize
-    const offset = input1.offsetHeight - input1.clientHeight;
-    input1.addEventListener("input", event => {
-      event.target.style.height = event.target.scrollHeight + offset + "px";
-    });
+    this.titleEl = input1;
+    this.titleHeight = this.$el.querySelector(".edit__title-height");
+  },
+
+  watch: {
+    title: {
+      handler(newValue) {
+        this.$nextTick().then(() => {
+          this.titleHeight.textContent = newValue || "TEST";
+          this.titleEl.style.height =
+            this.titleHeight.getBoundingClientRect().height + "px";
+        });
+      },
+      immediate: true
+    }
   },
 
   beforeRouteEnter(to, from, next) {
@@ -150,6 +161,8 @@ export default {
 
 <style lang="scss">
 .edit {
+  font-family: "Port Lligat Slab", serif;
+
   &__header {
     box-sizing: border-box;
     text-align: center;
@@ -184,26 +197,48 @@ export default {
   &__content {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 64px);
   }
 
   &__title,
   &__text {
     outline: none;
     border: none;
+    box-sizing: border-box;
     padding: 16px;
     font-family: "Port Lligat Slab", serif;
   }
 
   &__title {
-    box-sizing: border-box;
-    border-bottom: 1px solid rgba(#2c3e50, 0.3);
+    min-height: 22px * 1.6;
+  }
+
+  &__title,
+  &__title-height {
     font-weight: 500;
     font-size: 22px;
     line-height: 1.6;
     width: 100vw;
-    height: 22px * 1.6 + 16px * 2;
     resize: none;
+  }
+
+  &__title-height {
+    font-family: "Port Lligat Slab", serif;
+    outline: none;
+    border: none;
+    box-sizing: border-box;
+    position: absolute;
+    top: 64px;
+    background-color: rgba(red, 0.2);
+    visibility: hidden;
+    padding: 16px;
+  }
+
+  &__divider {
+    margin: 8px 0;
+    width: 100vw;
+    min-height: 1px;
+    background-color: rgba(#2c3e50, 0.3);
   }
 
   &__text {
