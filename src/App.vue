@@ -46,12 +46,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Port+Lligat+Slab&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Kreon:400,500&display=swap&subset=arabic,latin-ext");
 
 body {
   margin: 0;
   padding: 0;
-  font-family: "Port Lligat Slab", serif;
+  font-family: "Kreon", serif;
   font-size: 16px;
 }
 

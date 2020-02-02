@@ -161,8 +161,6 @@ export default {
 
 <style lang="scss">
 .edit {
-  font-family: "Port Lligat Slab", serif;
-
   &__header {
     box-sizing: border-box;
     text-align: center;
@@ -206,11 +204,12 @@ export default {
     border: none;
     box-sizing: border-box;
     padding: 16px;
-    font-family: "Port Lligat Slab", serif;
+    font-family: "Kreon", serif;
   }
 
   &__title {
     min-height: 22px * 1.6;
+    color: #2c3e50;
   }
 
   &__title,
@@ -248,6 +247,8 @@ export default {
     overflow-y: scroll;
     font-size: 18px;
     line-height: 1.6;
+    color: #505050;
+    padding-bottom: 64px;
   }
 }
 </style>
