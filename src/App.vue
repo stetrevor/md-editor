@@ -46,12 +46,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Kreon:400,500&display=swap&subset=arabic,latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Bitter&display=swap&subset=latin-ext");
 
 body {
   margin: 0;
   padding: 0;
-  font-family: "Kreon", serif;
+  font-family: "Bitter", serif;
   font-size: 16px;
 }
 

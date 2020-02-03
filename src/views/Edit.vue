@@ -204,7 +204,7 @@ export default {
     border: none;
     box-sizing: border-box;
     padding: 16px;
-    font-family: "Kreon", serif;
+    font-family: "Bitter", serif;
   }
 
   &__title {
@@ -222,7 +222,7 @@ export default {
   }
 
   &__title-height {
-    font-family: "Port Lligat Slab", serif;
+    font-family: "Bitter", serif;
     outline: none;
     border: none;
     box-sizing: border-box;
@@ -245,9 +245,11 @@ export default {
     flex-basis: 100%;
     resize: none;
     overflow-y: scroll;
-    font-size: 18px;
-    line-height: 1.6;
-    color: #505050;
+
+    font-size: 13px;
+    line-height: 2;
+    color: #585858;
+
     padding-bottom: 64px;
   }
 }
