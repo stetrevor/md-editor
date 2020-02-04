@@ -1,0 +1,7 @@
+.pop-up-enter-active, .pop-up-leave-active {
+  transition: bottom 200ms;
+}
+
+.pop-up-enter, .pop-up-leave-to {
+  bottom: -100%;
+}

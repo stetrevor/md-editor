@@ -32,35 +32,39 @@
 
     <div class="edit__title-height" :style="titleStyle"></div>
 
-    <bottom-sheet
-      title="Set Font"
-      confirm-text="Set"
-      v-if="pickingFont"
-      @bottom-sheet__cancel="pickingFont = false"
-      @bottom-sheet__confirm="
-        setFont();
-        pickingFont = false;
-      "
-    >
-      <font-list-item
-        v-for="style in styles"
-        :key="style.fontFamily"
-        :name="style.fontFamily"
-        :active="selectedStyle.fontFamily === style.fontFamily"
-        @click.native="selectedStyle = style"
-      />
-    </bottom-sheet>
+    <transition name="pop-up">
+      <bottom-sheet
+        title="Set Font"
+        confirm-text="Set"
+        v-if="pickingFont"
+        @bottom-sheet__cancel="pickingFont = false"
+        @bottom-sheet__confirm="
+          setFont();
+          pickingFont = false;
+        "
+      >
+        <font-list-item
+          v-for="style in styles"
+          :key="style.fontFamily"
+          :name="style.fontFamily"
+          :active="selectedStyle.fontFamily === style.fontFamily"
+          @click.native="selectedStyle = style"
+        />
+      </bottom-sheet>
+    </transition>
 
-    <bottom-sheet
-      text="Are you sure to delete the article?"
-      v-if="deletingArticle"
-      confirm-text="Delete"
-      @bottom-sheet__cancel="deletingArticle = false"
-      @bottom-sheet__confirm="
-        deletingArticle = false;
-        remove();
-      "
-    />
+    <transition name="pop-up">
+      <bottom-sheet
+        text="Are you sure to delete the article?"
+        v-if="deletingArticle"
+        confirm-text="Delete"
+        @bottom-sheet__cancel="deletingArticle = false"
+        @bottom-sheet__confirm="
+          deletingArticle = false;
+          remove();
+        "
+      />
+    </transition>
   </div>
 </template>
 
@@ -261,6 +265,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../scss/transitions";
+
 .edit {
   &__header {
     box-sizing: border-box;
