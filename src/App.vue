@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :style="fontStyle" v-if="ready">
     <router-view />
 
     <div class="upgrade-dialog" v-if="prompt">
@@ -23,30 +23,47 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
-  created() {
+  async created() {
     if (this.$workbox) {
       this.$workbox.addEventListener("waiting", () => {
         this.prompt = true;
       });
     }
+
+    this.ready = false;
+    await this.getFontPreference();
+    this.ready = true;
   },
+
+  computed: mapState({
+    fontStyle: state => ({
+      fontFamily: state.settings.fontPreference + ", serif"
+    })
+  }),
+
   methods: {
+    ...mapActions(["getFontPreference"]),
+
     async upgrade() {
       this.prompt = false;
       await this.$workbox.messageSW({ type: "SKIP_WAITING" });
     }
   },
+
   data() {
     return {
-      prompt: false
+      prompt: false,
+      ready: false
     };
   }
 };
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Bitter&display=swap&subset=latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Alegreya:400,500|Crimson+Pro:300,400,500|Eczar:400,500|Neuton:300,400,700|Rasa:400,500|Vesper+Libre:400,500|Vollkorn:400,600|Alegreya:400,500&display=swap&subset=cyrillic,cyrillic-ext,devanagari,greek,greek-ext,gujarati,latin-ext,vietnamese");
 
 body {
   margin: 0;
