@@ -10,6 +10,7 @@ const ADD_FILE = "ADD_FILE";
 const SET_EDITING_FILE = "SET_EDITING_FILE";
 const SAVE_FILE = "SAVE_FILE";
 const DELETE_FILE = "DELETE_FILE";
+const SET_SELECTED_FONT = "SET_SELECTED_FONT";
 
 export default new Vuex.Store({
   state: {
@@ -73,5 +74,32 @@ export default new Vuex.Store({
       commit(DELETE_FILE, { file });
     }
   },
-  modules: {}
+  modules: {
+    settings: {
+      state: {
+        fontPreference: ""
+      },
+
+      mutations: {
+        [SET_SELECTED_FONT](state, { font }) {
+          state.fontPreference = font;
+        }
+      },
+
+      actions: {
+        async setFontPreference({ commit }, { font }) {
+          await api.saveFontPreference(font);
+          commit(SET_SELECTED_FONT, { font });
+        },
+
+        async getFontPreference({ commit }) {
+          let font = await api.getFontPreference();
+          font = font || {
+            font: "Vesper Libre"
+          };
+          commit(SET_SELECTED_FONT, font);
+        }
+      }
+    }
+  }
 });
