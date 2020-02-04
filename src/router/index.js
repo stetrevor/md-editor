@@ -14,6 +14,11 @@ const routes = [
     path: "/:id/edit",
     name: "edit",
     component: () => import("../views/Edit.vue")
+  },
+  {
+    path: "/typesetting",
+    name: "typesetting",
+    component: () => import("../views/Typesetting.vue")
   }
 ];
 
