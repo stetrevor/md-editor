@@ -1,9 +1,9 @@
 <template>
   <div class="bottom-sheet">
     <h1 class="bottom-sheet__title" v-if="title">{{ title }}</h1>
-    <p class="bottom-sheet__text" v-if="text">{{ text }}</p>
 
     <div class="bottom-sheet__content">
+      <p class="bottom-sheet__text" v-if="text">{{ text }}</p>
       <slot></slot>
     </div>
 

@@ -5,7 +5,9 @@
       <div class="edit__font-settings edit__button" @click="pickingFont = true">
         Font
       </div>
-      <div class="edit__delete edit__button" @click="remove">Delete</div>
+      <div class="edit__delete edit__button" @click="deletingArticle = true">
+        Delete
+      </div>
     </div>
 
     <div class="edit__save-status">{{ saveStatus }}</div>
@@ -31,7 +33,6 @@
     <div class="edit__title-height" :style="titleStyle"></div>
 
     <bottom-sheet
-      ref="fontDialog"
       title="Set Font"
       confirm-text="Set"
       v-if="pickingFont"
@@ -49,6 +50,17 @@
         @click.native="selectedStyle = style"
       />
     </bottom-sheet>
+
+    <bottom-sheet
+      text="Are you sure to delete the article?"
+      v-if="deletingArticle"
+      confirm-text="Delete"
+      @bottom-sheet__cancel="deletingArticle = false"
+      @bottom-sheet__confirm="
+        deletingArticle = false;
+        remove();
+      "
+    />
   </div>
 </template>
 
@@ -223,6 +235,7 @@ export default {
     return {
       saveStatus: "",
       pickingFont: false,
+      deletingArticle: false,
       fonts: [
         ["Vesper Libre"],
         ["Rasa", "15px", undefined, "#484848"],
