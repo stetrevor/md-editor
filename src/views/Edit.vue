@@ -37,7 +37,7 @@
         title="Set Font"
         confirm-text="Set"
         v-if="pickingFont"
-        @bottom-sheet__cancel="pickingFont = false"
+        @bottom-sheet__cancel="cancelPreviewStyle"
         @bottom-sheet__confirm="
           setFont();
           pickingFont = false;
@@ -48,7 +48,10 @@
           :key="style.fontFamily"
           :name="style.fontFamily"
           :active="selectedStyle.fontFamily === style.fontFamily"
-          @click.native="selectedStyle = style"
+          @click.native="
+            previewStyle = selectedStyle;
+            selectedStyle = style;
+          "
         />
       </bottom-sheet>
     </transition>
@@ -199,6 +202,14 @@ export default {
 
     setFont() {
       this.setFontPreference({ font: this.selectedStyle.fontFamily });
+    },
+
+    cancelPreviewStyle() {
+      this.pickingFont = false;
+      if (this.previewStyle !== null) {
+        this.selectedStyle = this.previewStyle;
+        this.previewStyle = null;
+      }
     }
   },
 
@@ -252,7 +263,8 @@ export default {
         ["Neuton", "15px", 1.8, undefined, "0.02em"],
         ["Vollkorn", undefined, 1.8]
       ],
-      selectedStyle: { fontFamily: "" }
+      selectedStyle: { fontFamily: "" },
+      previewStyle: null
     };
   },
 
