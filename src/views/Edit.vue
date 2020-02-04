@@ -11,7 +11,12 @@
     <div class="edit__save-status">{{ saveStatus }}</div>
 
     <div class="edit__content">
-      <textarea class="edit__title" v-model.trim="title" placeholder="Title" />
+      <textarea
+        class="edit__title"
+        :style="titleStyle"
+        v-model.trim="title"
+        placeholder="Title"
+      />
 
       <div class="edit__divider"></div>
 
@@ -23,7 +28,7 @@
       ></textarea>
     </div>
 
-    <div class="edit__title-height"></div>
+    <div class="edit__title-height" :style="titleStyle"></div>
 
     <bottom-sheet
       ref="fontDialog"
@@ -115,7 +120,8 @@ export default {
   computed: {
     ...mapState({
       file: state =>
-        state.editingFile ? state.editingFile : { title: "", text: "" }
+        state.editingFile ? state.editingFile : { title: "", text: "" },
+      fontPreference: state => state.settings.fontPreference
     }),
 
     title: {
@@ -145,11 +151,20 @@ export default {
           fontWeight
         })
       );
+    },
+
+    titleStyle() {
+      return { fontFamily: this.selectedStyle.fontFamily };
     }
   },
 
   methods: {
-    ...mapActions(["deleteFile", "saveFile", "setEditingFile"]),
+    ...mapActions([
+      "deleteFile",
+      "saveFile",
+      "setEditingFile",
+      "setFontPreference"
+    ]),
 
     back() {
       // this.save();
@@ -167,7 +182,7 @@ export default {
     },
 
     setFont() {
-      console.log("set font");
+      this.setFontPreference({ font: this.selectedStyle.fontFamily });
     }
   },
 
@@ -207,7 +222,7 @@ export default {
   data() {
     return {
       saveStatus: "",
-      pickingFont: true,
+      pickingFont: false,
       fonts: [
         ["Vesper Libre"],
         ["Rasa", "15px", undefined, "#484848"],
@@ -222,13 +237,17 @@ export default {
       ],
       selectedStyle: { fontFamily: "" }
     };
+  },
+
+  created() {
+    this.selectedStyle = this.styles.find(
+      style => style.fontFamily === this.fontPreference
+    );
   }
 };
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Alegreya:400,500|Crimson+Pro:300,400,500|Eczar:400,500|Neuton:300,400,700|Rasa:400,500|Vesper+Libre:400,500|Vollkorn:400,600|Alegreya:400,500&display=swap&subset=cyrillic,cyrillic-ext,devanagari,greek,greek-ext,gujarati,latin-ext,vietnamese");
-
 .edit {
   &__header {
     box-sizing: border-box;
