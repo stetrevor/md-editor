@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-const dbPromise = openDB("md-editor", 1, {
+const dbPromise = openDB("md-editor", 3, {
   upgrade(db, oldVersion) {
     switch (oldVersion) {
       case 0:
@@ -13,6 +13,11 @@ const dbPromise = openDB("md-editor", 1, {
           autoIncrement: true
         });
         store.createIndex("updated", "updated");
+      // eslint-disable-next-line no-fallthrough
+      case 2:
+        db.createObjectStore("settings", {
+          keyPath: "name"
+        });
       // eslint-disable-next-line no-fallthrough
       default:
         break;
@@ -47,5 +52,14 @@ export default {
 
   async deleteFile(file) {
     return (await dbPromise).delete("articles", file.id);
+  },
+
+  async saveFontPreference(font) {
+    return (await dbPromise).put("settings", { name: "font", font });
+  },
+
+  async getFontPreference() {
+    const font = await (await dbPromise).get("settings", "font");
+    return font;
   }
 };
