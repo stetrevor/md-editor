@@ -2,9 +2,13 @@
   <div class="edit">
     <div class="edit__header">
       <div class="edit__back edit__button" @click="back">Back</div>
-      <div class="edit__save-status">{{ saveStatus }}</div>
+      <div class="edit__font-settings edit__button" @click="pickingFont = true">
+        Font
+      </div>
       <div class="edit__delete edit__button" @click="remove">Delete</div>
     </div>
+
+    <div class="edit__save-status">{{ saveStatus }}</div>
 
     <div class="edit__content">
       <textarea class="edit__title" v-model.trim="title" placeholder="Title" />
@@ -13,17 +17,40 @@
 
       <textarea
         class="edit__text"
+        :style="selectedStyle"
         v-model.trim="file.text"
         placeholder="Write Something..."
       ></textarea>
     </div>
 
     <div class="edit__title-height"></div>
+
+    <bottom-sheet
+      ref="fontDialog"
+      title="Set Font"
+      confirm-text="Set"
+      v-if="pickingFont"
+      @bottom-sheet__cancel="pickingFont = false"
+      @bottom-sheet__confirm="
+        setFont();
+        pickingFont = false;
+      "
+    >
+      <font-list-item
+        v-for="style in styles"
+        :key="style.fontFamily"
+        :name="style.fontFamily"
+        :active="selectedStyle.fontFamily === style.fontFamily"
+        @click.native="selectedStyle = style"
+      />
+    </bottom-sheet>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import BottomSheet from "@/components/BottomSheet";
+import FontListItem from "@/components/FontListItem";
 
 import { fromEvent, of, from, merge, empty, concat, defer } from "rxjs";
 import {
@@ -83,6 +110,8 @@ function setupAutoSave(input1, input2, saveFunc, statusFunc) {
 export default {
   name: "Edit",
 
+  components: { BottomSheet, FontListItem },
+
   computed: {
     ...mapState({
       file: state =>
@@ -96,6 +125,26 @@ export default {
       set(newValue) {
         this.file.title = newValue;
       }
+    },
+
+    styles() {
+      return this.fonts.map(
+        ([
+          fontFamily,
+          fontSize = "14px",
+          lineHeight = 1.6,
+          color = "#545454",
+          letterSpacing = "0px",
+          fontWeight = "400"
+        ]) => ({
+          fontFamily,
+          fontSize,
+          lineHeight,
+          color,
+          letterSpacing,
+          fontWeight
+        })
+      );
     }
   },
 
@@ -115,6 +164,10 @@ export default {
     save() {
       const editedFile = Object.assign({}, this.file, { updated: new Date() });
       return this.saveFile({ file: editedFile });
+    },
+
+    setFont() {
+      console.log("set font");
     }
   },
 
@@ -153,13 +206,29 @@ export default {
 
   data() {
     return {
-      saveStatus: ""
+      saveStatus: "",
+      pickingFont: true,
+      fonts: [
+        ["Vesper Libre"],
+        ["Rasa", "15px", undefined, "#484848"],
+        ["Alegreya", "14px", 1.9, "#585858", "0.02em", 500],
+        ["Crimson Pro", "15px", undefined, "#505050"],
+        // ["Solway", "13px", 1.8, undefined, "-0.02em"],
+        ["Eczar", "13px", 1.8, "#5f5f5f", "0.02em"],
+        // ["Yrsa", "15px", undefined, "#484848"], // Latin only version of Rasa
+        // ["Spectral", "13px", 1.8, "#505050"],
+        ["Neuton", "15px", 1.8, undefined, "0.02em"],
+        ["Vollkorn", undefined, 1.8]
+      ],
+      selectedStyle: { fontFamily: "" }
     };
   }
 };
 </script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css?family=Alegreya:400,500|Crimson+Pro:300,400,500|Eczar:400,500|Neuton:300,400,700|Rasa:400,500|Vesper+Libre:400,500|Vollkorn:400,600|Alegreya:400,500&display=swap&subset=cyrillic,cyrillic-ext,devanagari,greek,greek-ext,gujarati,latin-ext,vietnamese");
+
 .edit {
   &__header {
     box-sizing: border-box;
@@ -187,15 +256,25 @@ export default {
     }
   }
 
-  &__save-status {
+  &__font-settings {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  &__save-status {
+    width: 100%;
+    height: 32px;
+    font-size: 10px;
+    color: #757575;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 64px);
+    height: calc(100vh - 64px - 32px);
   }
 
   &__title,
