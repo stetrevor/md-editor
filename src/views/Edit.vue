@@ -41,13 +41,15 @@
         @bottom-sheet__cancel="finishSettings"
       >
         <h1 class="edit__settings-title">Font</h1>
-        <font-list-item
-          v-for="style in styles"
-          :key="style.fontFamily"
-          :name="style.fontFamily"
-          :active="selectedStyle.fontFamily === style.fontFamily"
-          @click.native="selectedStyle = style"
-        />
+        <div class="edit__settings-fonts">
+          <font-list-item
+            v-for="style in styles"
+            :key="style.fontFamily"
+            :name="style.fontFamily"
+            :active="selectedStyle.fontFamily === style.fontFamily"
+            @click.native="selectedStyle = style"
+          />
+        </div>
 
         <h1 class="edit__settings-title">Contrast</h1>
         <div class="edit__settings-contrast">
@@ -264,7 +266,7 @@ export default {
   data() {
     return {
       saveStatus: "",
-      showSettings: false,
+      showSettings: true,
       deletingArticle: false,
       fonts: [
         ["Vesper Libre"],
@@ -403,9 +405,21 @@ $themeColor: #2c3e50;
     padding-bottom: 64px;
   }
 
-  &__settings-title {
-    font-size: 18px;
-    margin: 8px 0 16px;
+  &__settings {
+    &-title {
+      font-size: 18px;
+      margin: 8px 0 16px;
+    }
+
+    &-fonts {
+      overflow-x: auto;
+      display: flex;
+
+      * {
+        flex: 0 0 auto;
+        margin-right: 8px;
+      }
+    }
   }
 }
 </style>

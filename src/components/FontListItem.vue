@@ -25,6 +25,7 @@ export default {
 <style lang="scss">
 .font-list-item {
   height: 48px;
+  padding: 0 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
