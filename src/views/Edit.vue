@@ -2,8 +2,8 @@
   <div class="edit">
     <div class="edit__header">
       <div class="edit__back edit__button" @click="back">Back</div>
-      <div class="edit__font-settings edit__button" @click="pickingFont = true">
-        Font
+      <div class="edit__settings edit__button" @click="showSettings = true">
+        Settings
       </div>
       <div class="edit__delete edit__button" @click="deletingArticle = true">
         Delete
@@ -24,7 +24,7 @@
 
       <textarea
         class="edit__text"
-        :style="selectedStyle"
+        :style="textStyle"
         v-model.trim="file.text"
         placeholder="Write Something..."
       ></textarea>
@@ -34,15 +34,16 @@
 
     <transition name="pop-up">
       <bottom-sheet
-        title="Set Font"
-        confirm-text="Set"
-        v-if="pickingFont"
+        title="Settings"
+        confirm-text="Save"
+        v-if="showSettings"
         @bottom-sheet__cancel="cancelPreviewStyle"
         @bottom-sheet__confirm="
           setFont();
-          pickingFont = false;
+          showSettings = false;
         "
       >
+        <h1 class="edit__settings-title">Font</h1>
         <font-list-item
           v-for="style in styles"
           :key="style.fontFamily"
@@ -53,6 +54,18 @@
             selectedStyle = style;
           "
         />
+
+        <h1 class="edit__settings-title">Contrast</h1>
+        <div class="edit__settings-contrast">
+          <vue-slider
+            class="edit__settings-contrast-slider"
+            v-model="luminancePercentage"
+            :min="0"
+            :max="34"
+            :contained="true"
+            tooltip="none"
+          />
+        </div>
       </bottom-sheet>
     </transition>
 
@@ -75,6 +88,8 @@
 import { mapState, mapActions } from "vuex";
 import BottomSheet from "@/components/BottomSheet";
 import FontListItem from "@/components/FontListItem";
+
+import VueSlider from "vue-slider-component";
 
 import { fromEvent, of, from, merge, empty, concat, defer } from "rxjs";
 import {
@@ -134,7 +149,7 @@ function setupAutoSave(input1, input2, saveFunc, statusFunc) {
 export default {
   name: "Edit",
 
-  components: { BottomSheet, FontListItem },
+  components: { BottomSheet, FontListItem, VueSlider },
 
   computed: {
     ...mapState({
@@ -153,12 +168,13 @@ export default {
     },
 
     styles() {
+      const color = this.textColor;
+
       return this.fonts.map(
         ([
           fontFamily,
           fontSize = "14px",
           lineHeight = 1.6,
-          color = "#545454",
           letterSpacing = "0px",
           fontWeight = "400"
         ]) => ({
@@ -174,6 +190,16 @@ export default {
 
     titleStyle() {
       return { fontFamily: this.selectedStyle.fontFamily };
+    },
+
+    // In HSL color model, when L is <= 34%, contrast ratio is above 7 against white background.
+    // When L is 0%, contrast ratio is 21 against white background.
+    textColor() {
+      return `hsl(0, 0%, ${34 - this.luminancePercentage}%)`;
+    },
+
+    textStyle() {
+      return Object.assign({}, this.selectedStyle, { color: this.textColor });
     }
   },
 
@@ -205,7 +231,7 @@ export default {
     },
 
     cancelPreviewStyle() {
-      this.pickingFont = false;
+      this.showSettings = false;
       if (this.previewStyle !== null) {
         this.selectedStyle = this.previewStyle;
         this.previewStyle = null;
@@ -249,22 +275,23 @@ export default {
   data() {
     return {
       saveStatus: "",
-      pickingFont: false,
+      showSettings: false,
       deletingArticle: false,
       fonts: [
         ["Vesper Libre"],
-        ["Rasa", "15px", undefined, "#484848"],
-        ["Alegreya", "14px", 1.9, "#585858", "0.02em", 500],
-        ["Crimson Pro", "15px", undefined, "#505050"],
+        ["Rasa", "15px", undefined],
+        ["Alegreya", "14px", 1.9, "0.02em", 500],
+        ["Crimson Pro", "15px", undefined],
         // ["Solway", "13px", 1.8, undefined, "-0.02em"],
-        ["Eczar", "13px", 1.8, "#5f5f5f", "0.02em"],
+        ["Eczar", "13px", 1.8, "0.02em"],
         // ["Yrsa", "15px", undefined, "#484848"], // Latin only version of Rasa
         // ["Spectral", "13px", 1.8, "#505050"],
-        ["Neuton", "15px", 1.8, undefined, "0.02em"],
+        ["Neuton", "15px", 1.8, "0.02em"],
         ["Vollkorn", undefined, 1.8]
       ],
       selectedStyle: { fontFamily: "" },
-      previewStyle: null
+      previewStyle: null,
+      luminancePercentage: 0
     };
   },
 
@@ -278,6 +305,9 @@ export default {
 
 <style lang="scss">
 @import "../scss/transitions";
+
+$themeColor: #2c3e50;
+@import "~vue-slider-component/lib/theme/default.scss";
 
 .edit {
   &__header {
@@ -306,7 +336,7 @@ export default {
     }
   }
 
-  &__font-settings {
+  &__settings {
     margin-left: auto;
     margin-right: auto;
   }
@@ -380,6 +410,11 @@ export default {
     color: #585858;
 
     padding-bottom: 64px;
+  }
+
+  &__settings-title {
+    font-size: 18px;
+    margin: 8px 0 16px;
   }
 }
 </style>
