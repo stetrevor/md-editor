@@ -272,7 +272,8 @@ export default {
         ["Alegreya", "14px", 1.9, "0.02em", 500],
         ["Crimson Pro", "15px", undefined],
         // ["Solway", "13px", 1.8, undefined, "-0.02em"],
-        ["Eczar", "13px", 1.8, "0.02em"],
+        // ["Eczar", "13px", 1.8, "0.02em"],
+        ["Eczar", "14px", 1.8, "0.02em"],
         // ["Yrsa", "15px", undefined, "#484848"], // Latin only version of Rasa
         // ["Spectral", "13px", 1.8, "#505050"],
         ["Neuton", "15px", 1.8, "0.02em"],
