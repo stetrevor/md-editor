@@ -37,11 +37,8 @@
         title="Settings"
         confirm-text="Save"
         v-if="showSettings"
-        @bottom-sheet__cancel="cancelPreviewStyle"
-        @bottom-sheet__confirm="
-          setFont();
-          showSettings = false;
-        "
+        :actions="false"
+        @bottom-sheet__cancel="finishSettings"
       >
         <h1 class="edit__settings-title">Font</h1>
         <font-list-item
@@ -64,7 +61,6 @@
             :max="34"
             :contained="true"
             tooltip="none"
-            @change="saveSetting({ name: 'textColor', textColor })"
           />
         </div>
       </bottom-sheet>
@@ -156,7 +152,10 @@ export default {
     ...mapState({
       file: state =>
         state.editingFile ? state.editingFile : { title: "", text: "" },
-      fontPreference: state => state.settings.settings.font
+      fontPreference: state => state.settings.settings.font,
+
+      textLuminancePercentage: state =>
+        state.settings.settings.textLuminancePercentage
     }),
 
     title: {
@@ -222,16 +221,18 @@ export default {
       return this.saveFile({ file: editedFile });
     },
 
-    setFont() {
-      this.saveSetting({ name: "font", font: this.selectedStyle.fontFamily });
-    },
-
-    cancelPreviewStyle() {
+    finishSettings() {
       this.showSettings = false;
       if (this.previewStyle !== null) {
         this.selectedStyle = this.previewStyle;
         this.previewStyle = null;
       }
+
+      this.saveSetting({ name: "font", font: this.selectedStyle.fontFamily });
+      this.saveSetting({
+        name: "textLuminancePercentage",
+        textLuminancePercentage: this.luminancePercentage
+      });
     }
   },
 
@@ -287,7 +288,7 @@ export default {
       ],
       selectedStyle: { fontFamily: "" },
       previewStyle: null,
-      luminancePercentage: 0
+      luminancePercentage: 34
     };
   },
 
@@ -295,6 +296,7 @@ export default {
     this.selectedStyle = this.styles.find(
       style => style.fontFamily === this.fontPreference
     );
+    this.luminancePercentage = this.textLuminancePercentage;
   }
 };
 </script>
