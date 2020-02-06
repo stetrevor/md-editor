@@ -1,21 +1,31 @@
 <template>
   <div class="bottom-sheet">
-    <h1 class="bottom-sheet__title" v-if="title">{{ title }}</h1>
+    <div
+      class="bottom-sheet__backdrop"
+      @click.self="$emit('bottom-sheet__cancel')"
+    >
+      <div class="bottom-sheet__sheet">
+        <h1 class="bottom-sheet__title" v-if="title">{{ title }}</h1>
 
-    <div class="bottom-sheet__content">
-      <p class="bottom-sheet__text" v-if="text">{{ text }}</p>
-      <slot></slot>
-    </div>
+        <div class="bottom-sheet__content">
+          <p class="bottom-sheet__text" v-if="text">{{ text }}</p>
+          <slot></slot>
+        </div>
 
-    <div class="bottom-sheet__actions">
-      <div
-        class="bottom-sheet__action bottom-sheet__action--cancel"
-        @click="$emit('bottom-sheet__cancel')"
-      >
-        Cancel
-      </div>
-      <div class="bottom-sheet__action" @click="$emit('bottom-sheet__confirm')">
-        {{ confirmText || "Ok" }}
+        <div class="bottom-sheet__actions" v-if="actions">
+          <div
+            class="bottom-sheet__action bottom-sheet__action--cancel"
+            @click="$emit('bottom-sheet__cancel')"
+          >
+            Cancel
+          </div>
+          <div
+            class="bottom-sheet__action"
+            @click="$emit('bottom-sheet__confirm')"
+          >
+            {{ confirmText || "Ok" }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -34,6 +44,11 @@ export default {
     },
     confirmText: {
       type: String
+    },
+
+    actions: {
+      type: Boolean,
+      default: true
     }
   }
 };
@@ -41,15 +56,26 @@ export default {
 
 <style lang="scss">
 .bottom-sheet {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 16px;
   user-select: none;
-  background-color: lighten(#2c3e50, 70%);
   box-shadow: 0 -4px 8px rgba(#2c3e50, 0.5);
+
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px;
+    background-color: lighten(#2c3e50, 70%);
+  }
 
   &__title {
     margin: 0;
