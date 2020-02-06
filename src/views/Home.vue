@@ -75,12 +75,13 @@ export default {
   }
 
   &__add-article {
-    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     background-color: #2c3e50;
     color: white;
     margin: 0;
-    padding: 16px;
     height: 48px;
     cursor: pointer;
     user-select: none;
