@@ -46,10 +46,7 @@
           :key="style.fontFamily"
           :name="style.fontFamily"
           :active="selectedStyle.fontFamily === style.fontFamily"
-          @click.native="
-            previewStyle = selectedStyle;
-            selectedStyle = style;
-          "
+          @click.native="selectedStyle = style"
         />
 
         <h1 class="edit__settings-title">Contrast</h1>
@@ -223,11 +220,6 @@ export default {
 
     finishSettings() {
       this.showSettings = false;
-      if (this.previewStyle !== null) {
-        this.selectedStyle = this.previewStyle;
-        this.previewStyle = null;
-      }
-
       this.saveSetting({ name: "font", font: this.selectedStyle.fontFamily });
       this.saveSetting({
         name: "textLuminancePercentage",
@@ -287,7 +279,6 @@ export default {
         ["Vollkorn", undefined, 1.8]
       ],
       selectedStyle: { fontFamily: "" },
-      previewStyle: null,
       luminancePercentage: 34
     };
   },
