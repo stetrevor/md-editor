@@ -1,12 +1,9 @@
 import { openDB } from "idb";
 
-const dbPromise = openDB("md-editor", 3, {
+const dbPromise = openDB("md-editor", 2, {
   upgrade(db, oldVersion) {
     switch (oldVersion) {
       case 0:
-      // placeholder case
-      // eslint-disable-next-line no-fallthrough
-      case 1:
         // eslint-disable-next-line no-case-declarations
         const store = db.createObjectStore("articles", {
           keyPath: "id",
@@ -14,7 +11,7 @@ const dbPromise = openDB("md-editor", 3, {
         });
         store.createIndex("updated", "updated");
       // eslint-disable-next-line no-fallthrough
-      case 2:
+      case 1:
         db.createObjectStore("settings", {
           keyPath: "name"
         });
