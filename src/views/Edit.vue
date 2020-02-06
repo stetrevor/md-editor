@@ -53,6 +53,12 @@
 
         <h1 class="edit__settings-title">Contrast</h1>
         <div class="edit__settings-contrast">
+          <div
+            class="edit__button edit__settings-contrast-button"
+            @click="luminancePercentage = Math.max(0, luminancePercentage - 1)"
+          >
+            -
+          </div>
           <vue-slider
             class="edit__settings-contrast-slider"
             v-model="luminancePercentage"
@@ -61,6 +67,12 @@
             :contained="true"
             tooltip="none"
           />
+          <div
+            class="edit__button edit__settings-contrast-button"
+            @click="luminancePercentage = Math.min(34, luminancePercentage + 1)"
+          >
+            +
+          </div>
         </div>
       </bottom-sheet>
     </transition>
@@ -408,7 +420,7 @@ $themeColor: #2c3e50;
   &__settings {
     &-title {
       font-size: 18px;
-      margin: 8px 0 16px;
+      margin: 16px 0 8px;
     }
 
     &-fonts {
@@ -418,6 +430,25 @@ $themeColor: #2c3e50;
       * {
         flex: 0 0 auto;
         margin-right: 8px;
+      }
+    }
+
+    &-contrast {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &-slider {
+        flex-grow: 1;
+      }
+
+      &-button {
+        width: 48px;
+        height: 48px;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 500;
       }
     }
   }
