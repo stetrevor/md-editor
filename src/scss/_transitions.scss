@@ -1,7 +1,7 @@
 .pop-up-enter-active, .pop-up-leave-active {
-  transition: bottom 200ms;
+  transition: opacity 200ms;
 }
 
 .pop-up-enter, .pop-up-leave-to {
-  bottom: -100%;
+  opacity: 0;
 }
