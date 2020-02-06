@@ -223,7 +223,7 @@ export default {
       this.saveSetting({ name: "font", font: this.selectedStyle.fontFamily });
       this.saveSetting({
         name: "textLuminancePercentage",
-        textLuminancePercentage: this.luminancePercentage
+        textLuminancePercentage: 34 - this.luminancePercentage
       });
     }
   },
@@ -280,7 +280,8 @@ export default {
         ["Vollkorn", undefined, 1.8]
       ],
       selectedStyle: { fontFamily: "" },
-      luminancePercentage: 34
+      // For display of the slider
+      luminancePercentage: 0
     };
   },
 
@@ -288,7 +289,7 @@ export default {
     this.selectedStyle = this.styles.find(
       style => style.fontFamily === this.fontPreference
     );
-    this.luminancePercentage = this.textLuminancePercentage;
+    this.luminancePercentage = 34 - this.textLuminancePercentage;
   }
 };
 </script>
