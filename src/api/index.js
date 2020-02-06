@@ -54,12 +54,11 @@ export default {
     return (await dbPromise).delete("articles", file.id);
   },
 
-  async saveFontPreference(font) {
-    return (await dbPromise).put("settings", { name: "font", font });
+  async saveSetting(setting) {
+    return (await dbPromise).put("settings", setting);
   },
 
-  async getFontPreference() {
-    const font = await (await dbPromise).get("settings", "font");
-    return font;
+  async getSettings() {
+    return (await dbPromise).getAll("settings");
   }
 };

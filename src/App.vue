@@ -34,18 +34,18 @@ export default {
     }
 
     this.ready = false;
-    await this.getFontPreference();
+    await this.getSettings();
     this.ready = true;
   },
 
   computed: mapState({
     fontStyle: state => ({
-      fontFamily: state.settings.fontPreference + ", serif"
+      fontFamily: state.settings.settings.font + ", serif"
     })
   }),
 
   methods: {
-    ...mapActions(["getFontPreference"]),
+    ...mapActions(["getSettings"]),
 
     async upgrade() {
       this.prompt = false;

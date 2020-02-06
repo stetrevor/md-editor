@@ -64,6 +64,7 @@
             :max="34"
             :contained="true"
             tooltip="none"
+            @change="saveSetting({ name: 'textColor', textColor })"
           />
         </div>
       </bottom-sheet>
@@ -155,7 +156,7 @@ export default {
     ...mapState({
       file: state =>
         state.editingFile ? state.editingFile : { title: "", text: "" },
-      fontPreference: state => state.settings.fontPreference
+      fontPreference: state => state.settings.settings.font
     }),
 
     title: {
@@ -204,12 +205,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      "deleteFile",
-      "saveFile",
-      "setEditingFile",
-      "setFontPreference"
-    ]),
+    ...mapActions(["deleteFile", "saveFile", "setEditingFile", "saveSetting"]),
 
     back() {
       // this.save();
@@ -227,7 +223,7 @@ export default {
     },
 
     setFont() {
-      this.setFontPreference({ font: this.selectedStyle.fontFamily });
+      this.saveSetting({ name: "font", font: this.selectedStyle.fontFamily });
     },
 
     cancelPreviewStyle() {

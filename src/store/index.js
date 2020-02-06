@@ -10,7 +10,7 @@ const ADD_FILE = "ADD_FILE";
 const SET_EDITING_FILE = "SET_EDITING_FILE";
 const SAVE_FILE = "SAVE_FILE";
 const DELETE_FILE = "DELETE_FILE";
-const SET_SELECTED_FONT = "SET_SELECTED_FONT";
+const UPDATE_SETTINGS = "UPDATE_SETTINGS";
 
 export default new Vuex.Store({
   state: {
@@ -74,30 +74,33 @@ export default new Vuex.Store({
       commit(DELETE_FILE, { file });
     }
   },
+
   modules: {
     settings: {
       state: {
-        fontPreference: ""
+        settings: {
+          font: "Vesper Libre",
+          textColor: "hsl(0, 0%, 34%)"
+        }
       },
 
       mutations: {
-        [SET_SELECTED_FONT](state, { font }) {
-          state.fontPreference = font;
+        [UPDATE_SETTINGS](state, setting) {
+          state.settings[setting.name] = setting[setting.name];
         }
       },
 
       actions: {
-        async setFontPreference({ commit }, { font }) {
-          await api.saveFontPreference(font);
-          commit(SET_SELECTED_FONT, { font });
+        async saveSetting({ commit }, setting) {
+          await api.saveSetting(setting);
+          commit(UPDATE_SETTINGS, setting);
         },
 
-        async getFontPreference({ commit }) {
-          let font = await api.getFontPreference();
-          font = font || {
-            font: "Vesper Libre"
-          };
-          commit(SET_SELECTED_FONT, font);
+        async getSettings({ commit }) {
+          const settings = await api.getSettings();
+          for (const setting of settings) {
+            commit(UPDATE_SETTINGS, setting);
+          }
         }
       }
     }
