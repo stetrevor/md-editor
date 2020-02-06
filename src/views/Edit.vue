@@ -333,7 +333,7 @@ $themeColor: #2c3e50;
   &__save-status {
     width: 100%;
     height: 32px;
-    font-size: 10px;
+    font-size: 12px;
     color: #757575;
     display: flex;
     justify-content: center;
