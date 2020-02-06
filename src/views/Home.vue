@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1 class="home__header">MD Editor</h1>
+    <div class="home__header"><h1>MD Editor</h1></div>
 
     <div class="home__files">
       <file-list-item
@@ -59,12 +59,14 @@ export default {
 
   &__header {
     box-sizing: border-box;
-    text-align: center;
     background-color: #2c3e50;
     color: white;
     margin: 0;
     padding: 16px;
     height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__files {
