@@ -87,22 +87,22 @@ export default new Vuex.Store({
       },
 
       mutations: {
-        [UPDATE_SETTINGS](state, setting) {
-          Vue.set(state.settings, setting.name, setting[setting.name]);
+        [UPDATE_SETTINGS](state, settings) {
+          for (const setting of settings) {
+            Vue.set(state.settings, setting.name, setting[setting.name]);
+          }
         }
       },
 
       actions: {
-        async saveSetting({ commit }, setting) {
-          await api.saveSetting(setting);
-          commit(UPDATE_SETTINGS, setting);
+        async saveSettings({ commit }, settings) {
+          await api.saveSettings(settings);
+          commit(UPDATE_SETTINGS, settings);
         },
 
         async getSettings({ commit }) {
           const settings = await api.getSettings();
-          for (const setting of settings) {
-            commit(UPDATE_SETTINGS, setting);
-          }
+          commit(UPDATE_SETTINGS, settings);
         }
       }
     }

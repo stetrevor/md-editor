@@ -258,7 +258,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["deleteFile", "saveFile", "setEditingFile", "saveSetting"]),
+    ...mapActions(["deleteFile", "saveFile", "setEditingFile", "saveSettings"]),
 
     back() {
       // this.save();
@@ -277,16 +277,18 @@ export default {
 
     finishSettings() {
       this.showSettings = false;
-      this.saveSetting({
-        name: "fontFamily",
-        fontFamily: this.selectedStyle.fontFamily
-      });
-      this.saveSetting({
-        name: "textLuminancePercentage",
-        textLuminancePercentage: 34 - this.luminancePercentage
-      });
-      this.saveSetting({ name: "fontSize", fontSize: this.fontSize });
-      this.saveSetting({ name: "lineHeight", lineHeight: this.lineHeight });
+      this.saveSettings([
+        {
+          name: "fontFamily",
+          fontFamily: this.selectedStyle.fontFamily
+        },
+        {
+          name: "textLuminancePercentage",
+          textLuminancePercentage: 34 - this.luminancePercentage
+        },
+        { name: "fontSize", fontSize: this.fontSize },
+        { name: "lineHeight", lineHeight: this.lineHeight }
+      ]);
     }
   },
 

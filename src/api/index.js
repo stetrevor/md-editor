@@ -51,8 +51,12 @@ export default {
     return (await dbPromise).delete("articles", file.id);
   },
 
-  async saveSetting(setting) {
-    return (await dbPromise).put("settings", setting);
+  async saveSettings(settings) {
+    const tx = (await dbPromise).transaction("settings", "readwrite");
+    for (const setting of settings) {
+      tx.store.put(setting);
+    }
+    return await tx.done;
   },
 
   async getSettings() {
