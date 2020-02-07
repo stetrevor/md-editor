@@ -328,7 +328,7 @@ export default {
   data() {
     return {
       saveStatus: "",
-      showSettings: true,
+      showSettings: false,
       deletingArticle: false,
       fonts: [
         ["Vesper Libre"],
