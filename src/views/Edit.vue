@@ -215,10 +215,6 @@ export default {
     ...mapState({
       file: state =>
         state.editingFile ? state.editingFile : { title: "", text: "" },
-      fontPreference: state => state.settings.settings.font,
-
-      textLuminancePercentage: state =>
-        state.settings.settings.textLuminancePercentage,
 
       settings: state => state.settings.settings
     }),
@@ -281,7 +277,10 @@ export default {
 
     finishSettings() {
       this.showSettings = false;
-      this.saveSetting({ name: "font", font: this.selectedStyle.fontFamily });
+      this.saveSetting({
+        name: "fontFamily",
+        fontFamily: this.selectedStyle.fontFamily
+      });
       this.saveSetting({
         name: "textLuminancePercentage",
         textLuminancePercentage: 34 - this.luminancePercentage
@@ -349,9 +348,9 @@ export default {
 
   created() {
     this.selectedStyle = this.styles.find(
-      style => style.fontFamily === this.fontPreference
+      style => style.fontFamily === this.settings.fontFamily
     );
-    this.luminancePercentage = 34 - this.textLuminancePercentage;
+    this.luminancePercentage = 34 - this.settings.textLuminancePercentage;
     this.fontSize = this.settings.fontSize;
     this.lineHeight = this.settings.lineHeight;
   }

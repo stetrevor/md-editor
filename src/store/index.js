@@ -79,7 +79,7 @@ export default new Vuex.Store({
     settings: {
       state: {
         settings: {
-          font: "Vesper Libre",
+          fontFamily: "Vesper Libre",
           textLuminancePercentage: 34,
           fontSize: 12,
           lineHeight: 15
@@ -88,7 +88,7 @@ export default new Vuex.Store({
 
       mutations: {
         [UPDATE_SETTINGS](state, setting) {
-          state.settings[setting.name] = setting[setting.name];
+          Vue.set(state.settings, setting.name, setting[setting.name]);
         }
       },
 
