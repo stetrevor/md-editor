@@ -51,23 +51,51 @@
           />
         </div>
 
-        <h1 class="edit__settings-title">Font Size</h1>
-        <div class="edit__settings-font-size">
-          <base-button
-            :disabled="fontSize === 13"
-            @base-button__clicked="fontSize = Math.max(13, fontSize - 1)"
-          >
-            -
-          </base-button>
-          <div class="edit__settings-font-size-value">
-            {{ fontSize + "px" }}
+        <div class="edit__settings-two-columns">
+          <div class="edit__settings-column">
+            <h1 class="edit__settings-title">Font Size</h1>
+            <div class="edit__settings-font-size">
+              <base-button
+                :disabled="fontSize === 13"
+                @base-button__clicked="fontSize = Math.max(13, fontSize - 1)"
+              >
+                -
+              </base-button>
+              <div class="edit__settings-font-size-value">
+                {{ fontSize + "px" }}
+              </div>
+              <base-button
+                :disabled="fontSize === 22"
+                @base-button__clicked="fontSize = Math.min(22, fontSize + 1)"
+              >
+                +
+              </base-button>
+            </div>
           </div>
-          <base-button
-            :disabled="fontSize === 22"
-            @base-button__clicked="fontSize = Math.min(22, fontSize + 1)"
-          >
-            +
-          </base-button>
+          <div class="edit__settings-column">
+            <h1 class="edit__settings-title">Line Height</h1>
+            <div class="edit__settings-line-height">
+              <base-button
+                :disabled="lineHeight === 15"
+                @base-button__clicked="
+                  lineHeight = Math.max(15, lineHeight - 1)
+                "
+              >
+                -
+              </base-button>
+              <div class="edit__settings-line-height-value">
+                {{ lineHeight / 10 }}
+              </div>
+              <base-button
+                :disabled="lineHeight === 30"
+                @base-button__clicked="
+                  lineHeight = Math.min(30, lineHeight + 1)
+                "
+              >
+                +
+              </base-button>
+            </div>
+          </div>
         </div>
 
         <h1 class="edit__settings-title">Contrast</h1>
@@ -234,7 +262,8 @@ export default {
     textStyle() {
       return Object.assign({}, this.selectedStyle, {
         color: this.textColor,
-        fontSize: this.fontSize + "px"
+        fontSize: this.fontSize + "px",
+        lineHeight: this.lineHeight / 10
       });
     }
   },
@@ -265,6 +294,7 @@ export default {
         textLuminancePercentage: 34 - this.luminancePercentage
       });
       this.saveSetting({ name: "fontSize", fontSize: this.fontSize });
+      this.saveSetting({ name: "lineHeight", lineHeight: this.lineHeight });
     }
   },
 
@@ -322,7 +352,9 @@ export default {
       selectedStyle: { fontFamily: "" },
       // For display of the slider
       luminancePercentage: 0,
-      fontSize: 13
+      fontSize: 13,
+      // Use 10 times of the actual value to avoid float number addition/subtraction.
+      lineHeight: 15
     };
   },
 
@@ -332,6 +364,7 @@ export default {
     );
     this.luminancePercentage = 34 - this.textLuminancePercentage;
     this.fontSize = this.settings.fontSize;
+    this.lineHeight = this.settings.lineHeight;
   }
 };
 </script>
@@ -470,15 +503,32 @@ $themeColor: #2c3e50;
       font-weight: 500;
     }
 
-    &-contrast,
-    &-font-size {
+    &-two-columns {
+      display: flex;
+    }
+
+    &-column {
+      flex-grow: 1;
+
+      &:first-of-type {
+        margin-right: 16px;
+      }
+    }
+
+    &-font-size,
+    &-line-height {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    &-contrast {
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    &-contrast-slider,
-    &-font-size-slider {
+    &-contrast-slider {
       flex-grow: 1;
     }
   }
