@@ -233,20 +233,9 @@ export default {
     },
 
     styles() {
-      const color = this.textColor;
-
       return this.fonts.map(
-        ([
+        ([fontFamily, letterSpacing = "0px", fontWeight = 400]) => ({
           fontFamily,
-          fontSize = "12px",
-          lineHeight = 1.6,
-          letterSpacing = "0px",
-          fontWeight = "400"
-        ]) => ({
-          fontFamily,
-          fontSize,
-          lineHeight,
-          color,
           letterSpacing,
           fontWeight
         })
@@ -342,16 +331,12 @@ export default {
       deletingArticle: false,
       fonts: [
         ["Vesper Libre"],
-        ["Rasa", "15px", undefined],
-        ["Alegreya", "13px", 1.9, "0.02em", 500],
-        ["Crimson Pro", "15px", undefined],
-        // ["Solway", "13px", 1.8, undefined, "-0.02em"],
-        // ["Eczar", "13px", 1.8, "0.02em"],
-        ["Eczar", "13px", 1.8, "0.02em"],
-        // ["Yrsa", "15px", undefined, "#484848"], // Latin only version of Rasa
-        // ["Spectral", "13px", 1.8, "#505050"],
-        ["Neuton", "15px", 1.8, "0.02em"],
-        ["Vollkorn", undefined, 1.8]
+        ["Rasa"],
+        ["Alegreya", "0.02em", 500],
+        ["Crimson Pro"],
+        ["Eczar", "0.02em"],
+        ["Neuton", "0.02em"],
+        ["Vollkorn"]
       ],
       selectedStyle: { fontFamily: "" },
       // For display of the slider
