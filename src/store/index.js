@@ -80,7 +80,8 @@ export default new Vuex.Store({
       state: {
         settings: {
           font: "Vesper Libre",
-          textLuminancePercentage: 34
+          textLuminancePercentage: 34,
+          fontSize: 13
         }
       },
 

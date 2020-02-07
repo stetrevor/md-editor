@@ -51,10 +51,29 @@
           />
         </div>
 
+        <h1 class="edit__settings-title">Font Size</h1>
+        <div class="edit__settings-font-size">
+          <base-button
+            :disabled="fontSize === 13"
+            @base-button__clicked="fontSize = Math.max(13, fontSize - 1)"
+          >
+            -
+          </base-button>
+          <div class="edit__settings-font-size-value">
+            {{ fontSize + "px" }}
+          </div>
+          <base-button
+            :disabled="fontSize === 22"
+            @base-button__clicked="fontSize = Math.min(22, fontSize + 1)"
+          >
+            +
+          </base-button>
+        </div>
+
         <h1 class="edit__settings-title">Contrast</h1>
         <div class="edit__settings-contrast">
           <div
-            class="edit__button edit__settings-contrast-button"
+            class="edit__button edit__settings-button"
             @click="luminancePercentage = Math.max(0, luminancePercentage - 1)"
           >
             -
@@ -68,7 +87,7 @@
             tooltip="none"
           />
           <div
-            class="edit__button edit__settings-contrast-button"
+            class="edit__button edit__settings-button"
             @click="luminancePercentage = Math.min(34, luminancePercentage + 1)"
           >
             +
@@ -96,6 +115,7 @@
 import { mapState, mapActions } from "vuex";
 import BottomSheet from "@/components/BottomSheet";
 import FontListItem from "@/components/FontListItem";
+import BaseButton from "@/components/BaseButton";
 
 import VueSlider from "vue-slider-component";
 
@@ -157,7 +177,7 @@ function setupAutoSave(input1, input2, saveFunc, statusFunc) {
 export default {
   name: "Edit",
 
-  components: { BottomSheet, FontListItem, VueSlider },
+  components: { BottomSheet, FontListItem, VueSlider, BaseButton },
 
   computed: {
     ...mapState({
@@ -166,7 +186,9 @@ export default {
       fontPreference: state => state.settings.settings.font,
 
       textLuminancePercentage: state =>
-        state.settings.settings.textLuminancePercentage
+        state.settings.settings.textLuminancePercentage,
+
+      settings: state => state.settings.settings
     }),
 
     title: {
@@ -184,7 +206,7 @@ export default {
       return this.fonts.map(
         ([
           fontFamily,
-          fontSize = "14px",
+          fontSize = "13px",
           lineHeight = 1.6,
           letterSpacing = "0px",
           fontWeight = "400"
@@ -210,7 +232,10 @@ export default {
     },
 
     textStyle() {
-      return Object.assign({}, this.selectedStyle, { color: this.textColor });
+      return Object.assign({}, this.selectedStyle, {
+        color: this.textColor,
+        fontSize: this.fontSize + "px"
+      });
     }
   },
 
@@ -239,6 +264,7 @@ export default {
         name: "textLuminancePercentage",
         textLuminancePercentage: 34 - this.luminancePercentage
       });
+      this.saveSetting({ name: "fontSize", fontSize: this.fontSize });
     }
   },
 
@@ -283,11 +309,11 @@ export default {
       fonts: [
         ["Vesper Libre"],
         ["Rasa", "15px", undefined],
-        ["Alegreya", "14px", 1.9, "0.02em", 500],
+        ["Alegreya", "13px", 1.9, "0.02em", 500],
         ["Crimson Pro", "15px", undefined],
         // ["Solway", "13px", 1.8, undefined, "-0.02em"],
         // ["Eczar", "13px", 1.8, "0.02em"],
-        ["Eczar", "14px", 1.8, "0.02em"],
+        ["Eczar", "13px", 1.8, "0.02em"],
         // ["Yrsa", "15px", undefined, "#484848"], // Latin only version of Rasa
         // ["Spectral", "13px", 1.8, "#505050"],
         ["Neuton", "15px", 1.8, "0.02em"],
@@ -295,7 +321,8 @@ export default {
       ],
       selectedStyle: { fontFamily: "" },
       // For display of the slider
-      luminancePercentage: 0
+      luminancePercentage: 0,
+      fontSize: 13
     };
   },
 
@@ -304,6 +331,7 @@ export default {
       style => style.fontFamily === this.fontPreference
     );
     this.luminancePercentage = 34 - this.textLuminancePercentage;
+    this.fontSize = this.settings.fontSize;
   }
 };
 </script>
@@ -433,23 +461,25 @@ $themeColor: #2c3e50;
       }
     }
 
-    &-contrast {
+    &-button {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    &-contrast,
+    &-font-size {
       display: flex;
       align-items: center;
       justify-content: center;
+    }
 
-      &-slider {
-        flex-grow: 1;
-      }
-
-      &-button {
-        width: 48px;
-        height: 48px;
-        box-sizing: border-box;
-        text-align: center;
-        font-size: 22px;
-        font-weight: 500;
-      }
+    &-contrast-slider,
+    &-font-size-slider {
+      flex-grow: 1;
     }
   }
 }
