@@ -56,8 +56,8 @@
             <h1 class="edit__settings-title">Font Size</h1>
             <div class="edit__settings-font-size">
               <base-button
-                :disabled="fontSize === 13"
-                @base-button__clicked="fontSize = Math.max(13, fontSize - 1)"
+                :disabled="fontSize === 12"
+                @base-button__clicked="fontSize = Math.max(12, fontSize - 1)"
               >
                 -
               </base-button>
@@ -234,7 +234,7 @@ export default {
       return this.fonts.map(
         ([
           fontFamily,
-          fontSize = "13px",
+          fontSize = "12px",
           lineHeight = 1.6,
           letterSpacing = "0px",
           fontWeight = "400"
@@ -352,7 +352,7 @@ export default {
       selectedStyle: { fontFamily: "" },
       // For display of the slider
       luminancePercentage: 0,
-      fontSize: 13,
+      fontSize: 12,
       // Use 10 times of the actual value to avoid float number addition/subtraction.
       lineHeight: 15
     };

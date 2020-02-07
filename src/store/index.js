@@ -81,7 +81,7 @@ export default new Vuex.Store({
         settings: {
           font: "Vesper Libre",
           textLuminancePercentage: 34,
-          fontSize: 13,
+          fontSize: 12,
           lineHeight: 15
         }
       },
