@@ -1,35 +1,44 @@
 const { GenerateSW } = require("workbox-webpack-plugin");
 
+const DEV = process.env.NODE_ENV === "development";
+
+const devSWPlugin = new GenerateSW({
+  clientsClaim: true,
+  skipWaiting: true
+});
+
 module.exports = {
-  publicPath: process.env.NODE_ENV === "development" ? "/md-editor/" : "",
+  publicPath: DEV ? "/md-editor/" : "",
 
   configureWebpack: {
     plugins: [
-      new GenerateSW({
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "google-fonts-stylesheets"
-            }
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-webfonts",
-              cacheableResponse: {
-                statuses: [0, 200]
+      DEV
+        ? devSWPlugin
+        : new GenerateSW({
+            runtimeCaching: [
+              {
+                urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+                handler: "StaleWhileRevalidate",
+                options: {
+                  cacheName: "google-fonts-stylesheets"
+                }
               },
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 365
+              {
+                urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+                handler: "CacheFirst",
+                options: {
+                  cacheName: "google-fonts-webfonts",
+                  cacheableResponse: {
+                    statuses: [0, 200]
+                  },
+                  expiration: {
+                    maxEntries: 50,
+                    maxAgeSeconds: 60 * 60 * 24 * 365
+                  }
+                }
               }
-            }
-          }
-        ]
-      })
+            ]
+          })
     ]
   },
 
