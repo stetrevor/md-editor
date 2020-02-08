@@ -8,7 +8,7 @@ const devSWPlugin = new GenerateSW({
 });
 
 module.exports = {
-  publicPath: DEV ? "/md-editor/" : "",
+  // publicPath: DEV ? "/md-editor/" : "",
 
   configureWebpack: {
     plugins: [
