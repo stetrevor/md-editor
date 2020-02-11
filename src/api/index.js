@@ -31,7 +31,6 @@ export default {
       .collection("articles")
       .where("uid", "==", uid)
       .orderBy("updated", "desc");
-    console.log("uid", uid);
 
     return (await query.get()).docs.map(doc =>
       Object.assign({}, { id: doc.id }, doc.data())
@@ -39,8 +38,6 @@ export default {
   },
 
   async getFileById(id) {
-    // const uid = firebase.auth().currentUser.uid;
-    console.log("get file by id", id);
     const query = firebase
       .firestore()
       .collection("articles")

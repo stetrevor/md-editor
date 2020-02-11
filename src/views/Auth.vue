@@ -52,7 +52,6 @@ export default {
             );
           })
           .catch(error => {
-            console.log("signIn");
             this.handleError(error);
           });
       } else {
@@ -60,7 +59,6 @@ export default {
           .auth()
           .signOut()
           .catch(error => {
-            console.log("sign out");
             this.handleError(error);
           });
       }
@@ -82,7 +80,6 @@ export default {
               window.localStorage.removeItem("emailForSignIn");
             })
             .catch(error => {
-              console.log("handleSignIn");
               this.handleError(error);
             });
         }
@@ -109,7 +106,6 @@ export default {
 
     handleError(error) {
       alert(`Error: ${error.message}`);
-      console.log(error);
     }
   },
 
