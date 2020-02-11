@@ -29,8 +29,8 @@ export default {
     const query = firebase
       .firestore()
       .collection("articles")
-      .where("uid", "==", uid);
-    // .orderBy("updated", "desc");
+      .where("uid", "==", uid)
+      .orderBy("updated", "desc");
     console.log("uid", uid);
 
     return (await query.get()).docs.map(doc =>
