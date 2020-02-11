@@ -66,21 +66,21 @@ export default {
   },
 
   async updateFile(file) {
-    const uid = firebase.auth().currentUser.uid;
     return await firebase
       .firestore()
       .collection("articles")
-      .where("uid", "==", uid)
       .doc(file.id)
       .set(file);
   },
 
+  async updateFileLocal(file) {
+    return (await dbPromise).put("articles", file);
+  },
+
   async deleteFile(file) {
-    const uid = firebase.auth().currentUser.uid;
     return await firebase
       .firestore()
       .collection("articles")
-      .where("uid", "==", uid)
       .doc(file.id)
       .delete();
   },

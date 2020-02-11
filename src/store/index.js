@@ -69,6 +69,11 @@ export default new Vuex.Store({
       commit(SAVE_FILE, { file });
     },
 
+    async saveFileLocal({ commit }, { file }) {
+      await api.updateFileLocal(file);
+      commit(SAVE_FILE, { file });
+    },
+
     async deleteFile({ commit }, { file }) {
       await api.deleteFile(file);
       commit(DELETE_FILE, { file });

@@ -258,10 +258,17 @@ export default {
   },
 
   methods: {
-    ...mapActions(["deleteFile", "saveFile", "setEditingFile", "saveSettings"]),
+    ...mapActions([
+      "deleteFile",
+      "saveFile",
+      "saveFileLocal",
+      "setEditingFile",
+      "saveSettings"
+    ]),
 
     back() {
-      // this.save();
+      const editedFile = Object.assign({}, this.file, { updated: new Date() });
+      this.saveFile({ file: editedFile });
       this.$router.push({ name: "home" });
     },
 
@@ -270,9 +277,9 @@ export default {
       this.$router.push({ name: "home" });
     },
 
-    save() {
+    saveLocal() {
       const editedFile = Object.assign({}, this.file, { updated: new Date() });
-      return this.saveFile({ file: editedFile });
+      return this.saveFileLocal({ file: editedFile });
     },
 
     finishSettings() {
@@ -295,7 +302,7 @@ export default {
   mounted() {
     const input1 = this.$el.querySelector(".edit__title");
     const input2 = this.$el.querySelector(".edit__text");
-    const saveFunc = this.save;
+    const saveFunc = this.saveLocal;
     const statusFunc = value => (this.saveStatus = value);
     setupAutoSave(input1, input2, saveFunc, statusFunc);
 
