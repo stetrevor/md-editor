@@ -1,4 +1,5 @@
 import { openDB } from "idb";
+import firebase from "../firebase";
 
 const dbPromise = openDB("md-editor", 2, {
   upgrade(db, oldVersion) {
@@ -24,31 +25,64 @@ const dbPromise = openDB("md-editor", 2, {
 
 export default {
   async getAllFiles() {
-    return (await dbPromise).getAllFromIndex("articles", "updated");
+    const uid = firebase.auth().currentUser.uid;
+    const query = firebase
+      .firestore()
+      .collection("articles")
+      .where("uid", "==", uid);
+    // .orderBy("updated", "desc");
+    console.log("uid", uid);
+
+    return (await query.get()).docs.map(doc =>
+      Object.assign({}, { id: doc.id }, doc.data())
+    );
   },
 
   async getFileById(id) {
-    return await (await dbPromise).get("articles", id);
+    // const uid = firebase.auth().currentUser.uid;
+    console.log("get file by id", id);
+    const query = firebase
+      .firestore()
+      .collection("articles")
+      .doc(id);
+    const data = await (await query.get()).data();
+    return Object.assign({}, { id }, data);
   },
 
   async addFile() {
+    const uid = firebase.auth().currentUser.uid;
     const newArticle = {
       title: "Untitled",
       text: "",
       created: new Date(),
-      updated: new Date()
+      updated: new Date(),
+      uid
     };
-
-    const id = await (await dbPromise).add("articles", newArticle);
-    return Object.assign({}, newArticle, { id });
+    const docRef = await firebase
+      .firestore()
+      .collection("articles")
+      .add(newArticle);
+    return Object.assign({}, newArticle, { id: docRef.id });
   },
 
   async updateFile(file) {
-    return (await dbPromise).put("articles", file);
+    const uid = firebase.auth().currentUser.uid;
+    return await firebase
+      .firestore()
+      .collection("articles")
+      .where("uid", "==", uid)
+      .doc(file.id)
+      .set(file);
   },
 
   async deleteFile(file) {
-    return (await dbPromise).delete("articles", file.id);
+    const uid = firebase.auth().currentUser.uid;
+    return await firebase
+      .firestore()
+      .collection("articles")
+      .where("uid", "==", uid)
+      .doc(file.id)
+      .delete();
   },
 
   async saveSettings(settings) {
