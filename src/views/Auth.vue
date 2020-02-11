@@ -30,8 +30,7 @@
 </template>
 
 <script>
-import * as firebase from "firebase/app";
-import "firebase/auth";
+import firebase from "../firebase";
 
 export default {
   name: "Auth",
@@ -91,23 +90,17 @@ export default {
     },
 
     async initFirebaseApp() {
-      firebase.initializeApp({
-        apiKey: "AIzaSyByL1dv3jV9V4y1jxfRx9DJz1hwSy4K0rc",
-        authDomain: "writer-joshua.firebaseapp.com",
-        databaseURL: "https://writer-joshua.firebaseio.com",
-        projectId: "writer-joshua",
-        storageBucket: "writer-joshua.appspot.com",
-        messagingSenderId: "383614170299",
-        appId: "1:383614170299:web:c8702657a838e4afc5659e"
-      });
-
       this.email = window.localStorage.getItem("emailForSignIn") || "";
       this.handleSignIn();
 
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           this.user = user;
-          this.$router.push({ name: "home", query: {} });
+          if (this.$route.query.redirect) {
+            this.$router.push(this.$route.query.redirect);
+          } else {
+            this.$router.push({ name: "home", query: {} });
+          }
         } else {
           this.user = null;
         }
