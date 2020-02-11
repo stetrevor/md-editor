@@ -262,12 +262,12 @@ export default {
 
     back() {
       // this.save();
-      this.$router.go(-1);
+      this.$router.push({ name: "home" });
     },
 
     remove() {
       this.deleteFile({ file: this.file });
-      this.$router.go(-1);
+      this.$router.push({ name: "home" });
     },
 
     save() {
@@ -317,11 +317,11 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    next(vm => vm.setEditingFile({ id: parseInt(to.params.id) }));
+    next(vm => vm.setEditingFile({ id: to.params.id }));
   },
 
   beforeRouteUpdate(to, from, next) {
-    this.setEditingFile({ id: parseInt(to.params.id) });
+    this.setEditingFile({ id: to.params.id });
     next();
   },
 
