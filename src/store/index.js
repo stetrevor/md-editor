@@ -11,12 +11,15 @@ const SET_EDITING_FILE = "SET_EDITING_FILE";
 const SAVE_FILE = "SAVE_FILE";
 const DELETE_FILE = "DELETE_FILE";
 const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+const ADD_FIRESTORE_SUBSCRIPTION = "ADD_FIRESTORE_SUBSCRIPTION";
+const REMOVE_FIRESTORE_SUBSCRIPTION = "REMOVE_FIRESTORE_SUBSCRIPTION";
 
 export default new Vuex.Store({
   state: {
     files: [],
     newFile: null,
-    editingFile: null
+    editingFile: null,
+    firestoreListeners: {}
   },
 
   mutations: {
@@ -40,13 +43,30 @@ export default new Vuex.Store({
     [DELETE_FILE](state, { file }) {
       const index = state.files.findIndex(f => f.id === file.id);
       state.files.splice(index, 1);
+    },
+
+    [ADD_FIRESTORE_SUBSCRIPTION](state, { subscriptionKey, listener }) {
+      Vue.set(state.firestoreListeners, subscriptionKey, listener);
+    },
+
+    [REMOVE_FIRESTORE_SUBSCRIPTION](state, { subscriptionKey }) {
+      if (subscriptionKey in state.firestoreListeners) {
+        state.firestoreListeners[subscriptionKey]();
+        Vue.delete(state.firestoreListeners, subscriptionKey);
+      }
     }
   },
 
   actions: {
-    async getAllFiles({ commit }) {
-      const files = await api.getAllFiles();
-      commit(GET_ALL_FILES, { files });
+    getAllFiles({ commit, state }, { subscriptionKey }) {
+      if (subscriptionKey in state.firestoreListeners) return;
+
+      const listener = api.getAllFiles(docs => {
+        commit(GET_ALL_FILES, {
+          files: docs.map(doc => Object.assign({}, { id: doc.id }, doc.data()))
+        });
+      });
+      commit(ADD_FIRESTORE_SUBSCRIPTION, { subscriptionKey, listener });
     },
 
     async addFile({ commit }) {
@@ -77,6 +97,10 @@ export default new Vuex.Store({
     async deleteFile({ commit }, { file }) {
       await api.deleteFile(file);
       commit(DELETE_FILE, { file });
+    },
+
+    unsubscribeFirestoreListener({ commit }, { subscriptionKey }) {
+      commit(REMOVE_FIRESTORE_SUBSCRIPTION, { subscriptionKey });
     }
   },
 
