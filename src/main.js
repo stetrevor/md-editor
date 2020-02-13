@@ -8,6 +8,15 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$workbox = wb;
 
+Vue.mixin({
+  beforeRouteLeave(to, from, next) {
+    store.dispatch("unsubscribeFirestoreListener", {
+      subscriptionKey: from.name
+    });
+    next();
+  }
+});
+
 new Vue({
   router,
   store,
