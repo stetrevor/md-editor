@@ -28,7 +28,7 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    next(vm => vm.getAllFiles());
+    next(vm => vm.getAllFiles({ subscriptionKey: to.name }));
   },
 
   computed: mapState({
