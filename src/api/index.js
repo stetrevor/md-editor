@@ -24,7 +24,7 @@ const dbPromise = openDB("md-editor", 2, {
 });
 
 export default {
-  async getAllFiles() {
+  getAllFiles(callback) {
     const uid = firebase.auth().currentUser.uid;
     const query = firebase
       .firestore()
@@ -32,9 +32,11 @@ export default {
       .where("uid", "==", uid)
       .orderBy("updated", "desc");
 
-    return (await query.get()).docs.map(doc =>
-      Object.assign({}, { id: doc.id }, doc.data())
-    );
+    return query.onSnapshot({ includeMetadataChanges: true }, snapshot => {
+      const docs = snapshot.docs;
+      const changes = snapshot.docChanges();
+      if (changes.length > 0) callback(docs, changes);
+    });
   },
 
   async getFileById(id) {
