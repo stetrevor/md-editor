@@ -259,6 +259,7 @@ export default {
 
   methods: {
     ...mapActions([
+      "addFileLocal",
       "deleteFile",
       "saveFile",
       "saveFileLocal",
@@ -324,7 +325,13 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    next(vm => vm.setEditingFile({ id: to.params.id }));
+    next(vm => {
+      if (to.params.id) {
+        vm.setEditingFile({ id: to.params.id });
+      } else {
+        vm.addFileLocal();
+      }
+    });
   },
 
   beforeRouteUpdate(to, from, next) {
