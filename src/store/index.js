@@ -69,9 +69,11 @@ export default new Vuex.Store({
       commit(ADD_FIRESTORE_SUBSCRIPTION, { subscriptionKey, listener });
     },
 
-    async addFile({ commit }) {
-      const file = await api.addFile();
+    async addFileLocal({ commit, state }) {
+      const file = await api.addFileLocal();
       commit(ADD_FILE, { file });
+      state.files.push(file);
+      commit(SET_EDITING_FILE, { file });
     },
 
     async setEditingFile({ commit, state }, { id }) {

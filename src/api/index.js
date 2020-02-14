@@ -48,20 +48,22 @@ export default {
     return Object.assign({}, { id }, data);
   },
 
-  async addFile() {
+  async addFileLocal() {
     const uid = firebase.auth().currentUser.uid;
     const newArticle = {
-      title: "Untitled",
+      title: "",
       text: "",
       created: new Date(),
       updated: new Date(),
       uid
     };
-    const docRef = await firebase
-      .firestore()
-      .collection("articles")
-      .add(newArticle);
-    return Object.assign({}, newArticle, { id: docRef.id });
+    const id = await (await dbPromise).add("articles", newArticle);
+    return Object.assign({}, newArticle, { id });
+    // const docRef = await firebase
+    //   .firestore()
+    //   .collection("articles")
+    //   .add(newArticle);
+    // return Object.assign({}, newArticle, { id: docRef.id });
   },
 
   async updateFile(file) {
