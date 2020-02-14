@@ -12,4 +12,11 @@ firebase.initializeApp({
   appId: "1:383614170299:web:c8702657a838e4afc5659e"
 });
 
+if (process.env.NODE_ENV === "development") {
+  firebase.firestore().settings({
+    host: "localhost:8081",
+    ssl: false
+  });
+}
+
 export default firebase;
