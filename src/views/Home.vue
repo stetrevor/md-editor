@@ -7,7 +7,7 @@
         v-for="item in files"
         :key="item.name"
         :item="item"
-        @click.native="edit(item)"
+        @click.native="$router.push({ name: 'edit', params: { id: item.id } })"
       ></file-list-item>
     </div>
 
@@ -37,15 +37,10 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["getAllFiles", "addFile"]),
+    ...mapActions(["getAllFiles", "addFileLocal"]),
 
-    edit(file) {
-      this.$router.push({ name: "edit", params: { id: file.id } });
-    },
-
-    async write() {
-      await this.addFile();
-      this.edit(this.newFile);
+    write() {
+      this.$router.push({ name: "new" });
     }
   }
 };
